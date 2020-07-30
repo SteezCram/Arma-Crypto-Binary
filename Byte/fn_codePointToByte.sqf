@@ -52,15 +52,17 @@ _binaryToDecimal = {
 _truncateBinary = {
 	params [["_b", [], [[]]]];
 
+	_returnB = +_b;
+
 	// Truncate the array
 	for "_i" from 0 to count(_b) - 1 do {
 		if ((_b # _i) isEqualTo 0) then {
-			_b deleteAt _i;
+			_returnB deleteAt 0;
 		};
 		if ((_b # _i) isEqualTo 1) exitWith {};
 	};
 
-	_b;
+	_returnB;
 };
 
 // Bitwise functions
