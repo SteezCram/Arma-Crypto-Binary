@@ -3,6 +3,8 @@
 Arma Crypto-Binary is repostory to interact with binary data in Arma 3.
 This repository contains several methods to transform a number to it's binary representation. Each binary representation is an array of string, because it's easier to apply the bitwise operation on them.
 
+With the byte converter, we can implement in Arma 3 base64 conversion, SHA algorithm, AES, Deflate compression algorithm, etc. The possibility are endless.
+
 
 ## Binary Data
 
