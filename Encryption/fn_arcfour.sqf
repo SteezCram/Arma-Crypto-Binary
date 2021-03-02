@@ -307,7 +307,9 @@ for "_i" from 0 to 255 do {
 
 _i = 0;
 _j = 0;
-for "_z" from 0 to _textLen -1 do {
+_transformByte = {
+	params ["_byte"];
+
 	// Compute the new byte
 	_i = (_i + 1) mod 256;
 	_j = (_j + (_state # _i)) mod 256;
@@ -319,11 +321,25 @@ for "_z" from 0 to _textLen -1 do {
 	_k = _state # (((_state # _i) + (_state # _j)) mod 256);
 	// Convert the _k to binary and the number from the text bytes
 	_kBin = _k call _decimalToBinary;
-	_numberToAddBin = (_textBytes # _z) call _decimalToBinary;
+	_numberToAddBin = (_byte) call _decimalToBinary;
 
 	// Get the new byte to add
 	_numberToAddBitwiseXorBin = [[_kBin, _numberToAddBin, 8] call _bitwiseXor] call _truncateBinary;
-	_cipherList pushBack ([_numberToAddBitwiseXorBin] call _binaryToDecimal);
+	_return = [_numberToAddBitwiseXorBin] call _binaryToDecimal;
+
+	_return;
+};
+
+for "_z" from 0 to _textLen -1 do {
+	if (typeName (_textBytes # _z) isEqualTo "ARRAY") then { 
+		_bytesToAdd = [];
+		{ _bytesToAdd pushBack ((_x) call _transformByte); } forEach (_textBytes # _z);
+
+		_cipherList pushBack _bytesToAdd;
+	}
+	else {
+		_cipherList pushBack ((_textBytes # _z) call _transformByte);
+	};
 };
 
 _cipherList;
