@@ -160,8 +160,6 @@ if (typeName _byteOrBytes isEqualTo "ARRAY") then {
 
 			_returnBin = [_firstByteBin, _secondByteBin] call _bitwiseOr;
 			_return = [[_returnBin] call _truncateBinary] call _binaryToDecimal;
-
-			diag_log str(_returnBin);
 			// ( m & 0x1f ) << 6 | ( n & 0x3f ) << 0
 		};
 		default {
