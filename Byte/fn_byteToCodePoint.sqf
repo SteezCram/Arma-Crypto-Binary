@@ -143,8 +143,6 @@ _rightShift = {
 _return = [];
 
 if (typeName _byteOrBytes isEqualTo "ARRAY") then {
-	systemChat "in if";
-
 	switch (count(_byteOrBytes)) do {
 		case 2: {
 			_firstByteBin = (_byteOrBytes # 0) call _decimalToBinary;
