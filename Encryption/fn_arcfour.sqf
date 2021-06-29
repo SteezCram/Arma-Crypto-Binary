@@ -307,13 +307,8 @@ for "_i" from 0 to 255 do {
 
 private _i = 0;
 _j = 0;
-<<<<<<< HEAD
 private _transformByte = {
 	params ["_byte"];
-=======
-_transformByte = {
-	params ["_byte"];
->>>>>>> dd31bdccb327cdec7e8daa1bae743ec23033c020
 
 	// Compute the new byte
 	_i = (_i + 1) mod 256;
@@ -337,13 +332,8 @@ _transformByte = {
 
 for "_z" from 0 to _textLen -1 do {
 	if (typeName (_textBytes # _z) isEqualTo "ARRAY") then { 
-<<<<<<< HEAD
 		private _bytesToAdd = [];
 		{ _bytesToAdd pushBack ((_x) call _transformByte); } forEach (_textBytes # _z);
-=======
-		_bytesToAdd = [];
-		{ _bytesToAdd pushBack ((_x) call _transformByte); } forEach (_textBytes # _z);
->>>>>>> dd31bdccb327cdec7e8daa1bae743ec23033c020
 
 		_cipherList pushBack _bytesToAdd;
 	}
