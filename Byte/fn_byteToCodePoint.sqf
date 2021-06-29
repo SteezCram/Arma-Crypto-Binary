@@ -10,7 +10,6 @@
 		* `number` - unicode code point
 */
 
-//params [["_byteOrBytes", [], [0, []]]];
 params ["_byteOrBytes"];
 
 
