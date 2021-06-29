@@ -25,7 +25,7 @@ if (_textOrBytes isEqualTo "" && !_isByte) exitWith {};
 if (_textOrBytes isEqualTo [] && _isByte) exitWith {};
 
 // Helper functions
-_codePointToByte = {
+private _codePointToByte = {
 	params [["_codePoint", 0, [0]]];
 
 	// Error handle
@@ -33,9 +33,9 @@ _codePointToByte = {
 
 
 	// Function helper
-	_decimalToBinary = {
+	private _decimalToBinary = {
 		params [["_n", 0, [0]]];
-		_k = [];
+		private _k = [];
 
 		// Get the binary value
 		while {_n > 0} do {
@@ -48,11 +48,11 @@ _codePointToByte = {
 		reverse _k;
 		_k;
 	};
-	_binaryToDecimal = {
+	private _binaryToDecimal = {
 		params [["_b", [], [[]]]];
 		reverse _b;
-		_d = 0;
-		_p = 0;
+		private _d = 0;
+		private _p = 0;
 
 		// Compute the decimal number
 		{
@@ -64,10 +64,10 @@ _codePointToByte = {
 
 		_d;
 	};
-	_truncateBinary = {
+	private _truncateBinary = {
 		params [["_b", [], [[]]]];
 
-		_returnB = +_b;
+		private _returnB = +_b;
 
 		// Truncate the array
 		for "_i" from 0 to count(_b) - 1 do {
@@ -81,7 +81,7 @@ _codePointToByte = {
 	};
 
 	// Bitwise functions
-	_bitwiseAnd = {
+	private _bitwiseAnd = {
 		params [["_x", [], [[]]], ["_y", [], [[]]], ["_bits", 0, [0]]];
 		// Set the bits width
 		if (_bits isEqualTo 0) then { _bits = 32 };
@@ -102,7 +102,7 @@ _codePointToByte = {
 
 
 		// Apply the operation
-		_result = [];
+		private _result = [];
 		for "_i" from 0 to _bits -1 do {
 			if (((_x # _i) isEqualTo 1) && ((_y # _i) isEqualTo 1)) then {
 				_result pushBack 1;
@@ -113,7 +113,7 @@ _codePointToByte = {
 
 		_result;
 	};
-	_bitwiseOr = {
+	private _bitwiseOr = {
 		params [["_x", [], [[]]], ["_y", [], [[]]], ["_bits", 0, [0]]];
 		// Set the bits width
 		if (_bits isEqualTo 0) then { _bits = 32 };
@@ -134,7 +134,7 @@ _codePointToByte = {
 
 
 		// Apply the operation
-		_result = [];
+		private _result = [];
 		for "_i" from 0 to _bits -1 do {
 			if (((_x # _i) isEqualTo 1) || ((_y # _i) isEqualTo 1)) then {
 				_result pushBack 1;
@@ -147,36 +147,36 @@ _codePointToByte = {
 	};
 
 	// Shifting functions
-	_leftShift = {
+	private _leftShift = {
 		params [["_x", 0, [0]], ["_y", 0, [0]]];
 		(_x * (2 ^ _y))
 	};
-	_rightShift = {
+	private _rightShift = {
 		params [["_x", 0, [0]], ["_y", 0, [0]]];
 		floor((_x / (2 ^ _y)))
 	};
 
 
 	// Main logic
-	_return = [];
+	private _return = [];
 
 	if (_codePoint < 0x80) then {
 		_return = _codePoint;
 	};
 	if (_codePoint >= 0x80 && _codePoint < 0x800) then 
 	{
-		_bin0xC0 = 0xC0 call _decimalToBinary;
-		_binCodePoint = call _decimalToBinary;
-		_bin0x80 = 0x80 call _decimalToBinary;
-		_bin0x3F = 0x3F call _decimalToBinary;
+		private _bin0xC0 = 0xC0 call _decimalToBinary;
+		private _binCodePoint = call _decimalToBinary;
+		private _bin0x80 = 0x80 call _decimalToBinary;
+		private _bin0x3F = 0x3F call _decimalToBinary;
 
-		_codePointShift = [_codePoint, 6] call _rightShift;
-		_codePointBitwiseAnd = [_binCodePoint, _bin0x3F] call _bitwiseAnd;
-		_firstByteBin = [_bin0xC0, [_codePointShift] call _decimalToBinary] call _bitwiseOr;
-		_secondByteBin = [_bin0x80, [_bin0x3F, _codePointBitwiseAnd] call _bitwiseAnd] call _bitwiseOr;
+		private _codePointShift = [_codePoint, 6] call _rightShift;
+		private _codePointBitwiseAnd = [_binCodePoint, _bin0x3F] call _bitwiseAnd;
+		private _firstByteBin = [_bin0xC0, [_codePointShift] call _decimalToBinary] call _bitwiseOr;
+		private _secondByteBin = [_bin0x80, [_bin0x3F, _codePointBitwiseAnd] call _bitwiseAnd] call _bitwiseOr;
 
-		_firstByteNumber = [[_firstByteBin] call _truncateBinary] call _binaryToDecimal;
-		_secondByteNumber = [[_secondByteBin] call _truncateBinary] call _binaryToDecimal;
+		private _firstByteNumber = [[_firstByteBin] call _truncateBinary] call _binaryToDecimal;
+		private _secondByteNumber = [[_secondByteBin] call _truncateBinary] call _binaryToDecimal;
 
 		_return = [_firstByteNumber, _secondByteNumber];
 	};
@@ -189,9 +189,9 @@ _codePointToByte = {
 
 	_return;	
 };
-_decimalToBinary = {
+private _decimalToBinary = {
 	params [["_n", 0, [0]]];
-	_k = [];
+	private _k = [];
 
 	// Get the binary value
 	while {_n > 0} do {
@@ -204,11 +204,11 @@ _decimalToBinary = {
 	reverse _k;
 	_k;
 };
-_binaryToDecimal = {
+private _binaryToDecimal = {
 	params [["_b", [], [[]]]];
 	reverse _b;
-	_d = 0;
-	_p = 0;
+	private _d = 0;
+	private _p = 0;
 
 	// Compute the decimal number
 	{
@@ -220,10 +220,10 @@ _binaryToDecimal = {
 
 	_d;
 };
-_truncateBinary = {
+private _truncateBinary = {
 	params [["_b", [], [[]]]];
 
-	_returnB = +_b;
+	private _returnB = +_b;
 
 	// Truncate the array
 	for "_i" from 0 to count(_b) - 1 do {
@@ -235,7 +235,7 @@ _truncateBinary = {
 
 	_returnB;
 };
-_bitwiseXor = {
+private _bitwiseXor = {
 	params [["_x", [], [[]]], ["_y", [], [[]]], ["_bits", 0, [0]]];
 	// Set the bits width
 	if (_bits isEqualTo 0) then { _bits = 32 };
@@ -256,7 +256,7 @@ _bitwiseXor = {
 
 
 	// Apply the operation
-	_result = [];
+	private _result = [];
 	for "_i" from 0 to _bits -1 do {
 		if ((_x # _i) != ((_y # _i))) then {
 			_result pushBack 1;
@@ -270,10 +270,10 @@ _bitwiseXor = {
 
 
 // Initialize variable
-_keyCodePoints = toArray _key;
-_keyBytes = [];
-_textBytes = [];
-_cipherList = [];
+private _keyCodePoints = toArray _key;
+private _keyBytes = [];
+private _textBytes = [];
+private _cipherList = [];
 
 // Get the bytes for the key and the text
 { _keyBytes pushBack (_x call _codePointToByte); } forEach _keyCodePoints;
@@ -285,18 +285,18 @@ else {
 	{ _textBytes pushBack (_x call _codePointToByte); } forEach _textCodePoints;
 };
 
-_keyLen = count _keyBytes;
-_textLen = count _textBytes;
+private _keyLen = count _keyBytes;
+private _textLen = count _textBytes;
 
 
 // Create the state
-_state = [];
+private _state = [];
 for "_i" from 0 to 255 do {
 	_state pushBack _i;
 };
 
 // Compute the state
-_j = 0;
+private _j = 0;
 for "_i" from 0 to 255 do {
 	_j = (_j + (_state # _i) + ((_keyBytes # (_i % _keyLen)))) mod 256;
 	_t = (_state # _i);
@@ -305,9 +305,9 @@ for "_i" from 0 to 255 do {
 };
 
 
-_i = 0;
+private _i = 0;
 _j = 0;
-_transformByte = {
+private _transformByte = {
 	params ["_byte", "_state"];
 
 	// Compute the new byte
@@ -318,21 +318,21 @@ _transformByte = {
 	_state set [_j, _t];
 
 	// Get the final number
-	_k = _state # (((_state # _i) + (_state # _j)) mod 256);
+	private _k = _state # (((_state # _i) + (_state # _j)) mod 256);
 	// Convert the _k to binary and the number from the text bytes
-	_kBin = _k call _decimalToBinary;
-	_numberToAddBin = (_byte) call _decimalToBinary;
+	private _kBin = _k call _decimalToBinary;
+	private _numberToAddBin = (_byte) call _decimalToBinary;
 
 	// Get the new byte to add
-	_numberToAddBitwiseXorBin = [[_kBin, _numberToAddBin, 8] call _bitwiseXor] call _truncateBinary;
-	_return = [_numberToAddBitwiseXorBin] call _binaryToDecimal;
+	private _numberToAddBitwiseXorBin = [[_kBin, _numberToAddBin, 8] call _bitwiseXor] call _truncateBinary;
+	private _return = [_numberToAddBitwiseXorBin] call _binaryToDecimal;
 
 	_return;
 };
 
 for "_z" from 0 to _textLen -1 do {
 	if (typeName (_textBytes # _z) isEqualTo "ARRAY") then { 
-		_bytesToAdd = [];
+		private _bytesToAdd = [];
 		{ _bytesToAdd pushBack ([_x, _state] call _transformByte); } forEach (_textBytes # _z);
 
 		_cipherList pushBack _bytesToAdd;

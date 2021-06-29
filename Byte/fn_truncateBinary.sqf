@@ -12,7 +12,7 @@
 
 params [["_b", [], [[]]]];
 
-_returnB = +_b;
+private _returnB = +_b;
 
 // Truncate the array
 for "_i" from 0 to count(_b) - 1 do {

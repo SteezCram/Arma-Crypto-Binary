@@ -15,9 +15,9 @@ params ["_byteOrBytes"];
 
 
 // Function helper
-_decimalToBinary = {
+private _decimalToBinary = {
 	params [["_n", 0, [0]]];
-	_k = [];
+	private _k = [];
 
 	// Get the binary value
 	while {_n > 0} do {
@@ -30,11 +30,11 @@ _decimalToBinary = {
 	reverse _k;
 	_k;
 };
-_binaryToDecimal = {
+private _binaryToDecimal = {
 	params [["_b", [], [[]]]];
 	reverse _b;
-	_d = 0;
-	_p = 0;
+	private _d = 0;
+	private _p = 0;
 
 	// Compute the decimal number
 	{
@@ -46,10 +46,10 @@ _binaryToDecimal = {
 
 	_d;
 };
-_truncateBinary = {
+private _truncateBinary = {
 	params [["_b", [], [[]]]];
 
-	_returnB = +_b;
+	private _returnB = +_b;
 
 	// Truncate the array
 	for "_i" from 0 to count(_b) - 1 do {
@@ -63,7 +63,7 @@ _truncateBinary = {
 };
 
 // Bitwise functions
-_bitwiseAnd = {
+private _bitwiseAnd = {
 	params [["_x", [], [[]]], ["_y", [], [[]]], ["_bits", 0, [0]]];
 	// Set the bits width
 	if (_bits isEqualTo 0) then { _bits = 32 };
@@ -84,7 +84,7 @@ _bitwiseAnd = {
 
 
 	// Apply the operation
-	_result = [];
+	private _result = [];
 	for "_i" from 0 to _bits -1 do {
 		if (((_x # _i) isEqualTo 1) && ((_y # _i) isEqualTo 1)) then {
 			_result pushBack 1;
@@ -95,7 +95,7 @@ _bitwiseAnd = {
 
 	_result;
 };
-_bitwiseOr = {
+private _bitwiseOr = {
 	params [["_x", [], [[]]], ["_y", [], [[]]], ["_bits", 0, [0]]];
 	// Set the bits width
 	if (_bits isEqualTo 0) then { _bits = 32 };
@@ -116,7 +116,7 @@ _bitwiseOr = {
 
 
 	// Apply the operation
-	_result = [];
+	private _result = [];
 	for "_i" from 0 to _bits -1 do {
 		if (((_x # _i) isEqualTo 1) || ((_y # _i) isEqualTo 1)) then {
 			_result pushBack 1;
@@ -129,34 +129,36 @@ _bitwiseOr = {
 };
 
 // Shifting functions
-_leftShift = {
+private _leftShift = {
 	params [["_x", 0, [0]], ["_y", 0, [0]]];
 	(_x * (2 ^ _y))
 };
-_rightShift = {
+private _rightShift = {
 	params [["_x", 0, [0]], ["_y", 0, [0]]];
 	floor((_x / (2 ^ _y)))
 };
 
 
 // Main logic
-_return = [];
+private _return = [];
 
 if (typeName _byteOrBytes isEqualTo "ARRAY") then {
-	switch (count(_byteOrBytes)) do {
+
+	switch (count(_byteOrBytes)) do 
+	{
 		case 2: {
-			_firstByteBin = (_byteOrBytes # 0) call _decimalToBinary;
-			_secondByteBin = (_byteOrBytes # 1) call _decimalToBinary;
+			private _firstByteBin = (_byteOrBytes # 0) call _decimalToBinary;
+			private _secondByteBin = (_byteOrBytes # 1) call _decimalToBinary;
 
 			_firstByteBin = [_firstByteBin, 0x1f call _decimalToBinary] call _bitwiseAnd;
 			_secondByteBin = [_secondByteBin, 0x3f call _decimalToBinary] call _bitwiseAnd;
-			_firstByteNumber = [[[_firstByteBin] call _truncateBinary] call _binaryToDecimal, 6] call _leftShift;
-			_secondByteNumber = [[[_secondByteBin] call _truncateBinary] call _binaryToDecimal, 0] call _leftShift;
+			private _firstByteNumber = [[[_firstByteBin] call _truncateBinary] call _binaryToDecimal, 6] call _leftShift;
+			private _secondByteNumber = [[[_secondByteBin] call _truncateBinary] call _binaryToDecimal, 0] call _leftShift;
 
 			_firstByteBin = _firstByteNumber call _decimalToBinary;
 			_secondByteBin = _secondByteNumber call _decimalToBinary;
 
-			_returnBin = [_firstByteBin, _secondByteBin] call _bitwiseOr;
+			private _returnBin = [_firstByteBin, _secondByteBin] call _bitwiseOr;
 			_return = [[_returnBin] call _truncateBinary] call _binaryToDecimal;
 			// ( m & 0x1f ) << 6 | ( n & 0x3f ) << 0
 		};
@@ -165,11 +167,12 @@ if (typeName _byteOrBytes isEqualTo "ARRAY") then {
 		};
 	}
 }
-else {
-	_byteBin = _byteOrBytes call _decimalToBinary;
+else 
+{
+	private _byteBin = _byteOrBytes call _decimalToBinary;
 	_byteBin = [_byteBin, 0x7f call _decimalToBinary] call _bitwiseAnd;
 
-	_byteNumber = [[_byteBin] call _truncateBinary] call _binaryToDecimal;
+	private _byteNumber = [[_byteBin] call _truncateBinary] call _binaryToDecimal;
 
 	_return = [_byteNumber, 0] call _leftShift;
 	// ( m & 0x7f ) << 0

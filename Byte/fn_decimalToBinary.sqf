@@ -12,7 +12,7 @@
 
 params [["_n", 0, [0]]];
 
-_k = [];
+private _k = [];
 
 // Get the binary value
 while {_n > 0} do {

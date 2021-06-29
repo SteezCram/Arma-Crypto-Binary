@@ -32,7 +32,7 @@ reverse _y;
 
 
 // Apply the operation
-_result = [];
+private _result = [];
 for "_i" from 0 to _bits -1 do {
 	if (((_x # _i) isEqualTo 1) && ((_y # _i) isEqualTo 1)) then {
 		_result pushBack 1;

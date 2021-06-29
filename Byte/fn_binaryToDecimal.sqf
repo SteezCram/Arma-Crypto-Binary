@@ -13,8 +13,8 @@
 params [["_b", [], [[]]]];
 
 reverse _b;
-_d = 0;
-_p = 0;
+private _d = 0;
+private _p = 0;
 
 // Compute the decimal number
 {
